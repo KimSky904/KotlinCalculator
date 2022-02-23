@@ -8,7 +8,9 @@ import com.cloud.calculator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var number : String? = ""
+    private var number : String? = "0"
+    private var mode : String? = ""
+    private var isPaste : Boolean = true
     private lateinit var binding : ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,22 +31,35 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding.btnNine.setOnClickListener(this)
         binding.btnZero.setOnClickListener(this)
         // symbol onClickListener
-        binding.btnRemove.setOnClickListener {}
+        binding.btnRemove.setOnClickListener {
+            initialAll()
+            binding.btnRemove.text = "AC"
+        }
+        binding.btnNegativePositive.setOnClickListener {
+            number = (number?.trim()?.toInt()?.times(-1)).toString()
+            updateScreenNumber()
+        }
+        binding.btnPercent.setOnClickListener {
+            isPaste = false
+            number = (number?.trim()?.toInt()?.times(0.01)).toString()
+            updateScreenNumber()
+        }
+        binding.btnEqual.setOnClickListener {
+            var intNumber = number?.trim()?.toInt()
+            when(mode) {
+                "add" -> ""
+                "sub" -> ""
+                "mul" -> ""
+                "div" -> ""
+            }
+        }
+
 
 
     }
     // 화면 숫자 update
     private fun updateScreenNumber(){
         binding.txtScreen.text = number
-    }
-
-    // 숫자 버튼 눌렸을 경우
-    fun numberClicked() {
-
-    }
-    // 기호(기능) 버튼 눌렀을 경우
-    fun symbolClicked(){
-
     }
     // 초기화
     fun initialAll(){
@@ -53,6 +68,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
+        if(!isPaste) number = ""
         when(v?.id) {
             R.id.btn_one -> number += "1"
             R.id.btn_two -> number += "2"
@@ -65,6 +81,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btn_nine -> number += "9"
             R.id.btn_zero -> number += "0"
         }
+        binding.btnRemove.text = "C"
         updateScreenNumber()
     }
 
